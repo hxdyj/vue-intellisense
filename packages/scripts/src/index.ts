@@ -6,6 +6,7 @@ import { listFiles } from './listFiles'
 import { vueDocgenToVetur } from './vueDocgenToVetur'
 import * as fs from 'fs'
 import { filePathsToVeturJsonData } from './globalAttributesGenToVetur'
+import {trimCharsEnd} from 'lodash/fp'
 
 handleWarningMissingAlias()
 
@@ -38,13 +39,21 @@ async function writeVeturFiles(
   outputPath: string,
   attributes: Record<string, any>,
   tags: Record<string, any>,
-  globalAttribute: any
+  globalAttribute: Array<string>
 ): Promise<void> {
   const _out = outputPath.endsWith('/') ? outputPath : outputPath + '/'
   fs.mkdirSync(_out, { recursive: true })
   fs.writeFileSync(_out + 'attributes.json', JSON.stringify(attributes, undefined, 2))
   fs.writeFileSync(_out + 'tags.json', JSON.stringify(tags, undefined, 2))
-  fs.writeFileSync(_out + 'globalAttribute.json', JSON.stringify(globalAttribute, undefined, 2))
+
+  let data = globalAttribute.map(i=>{
+    return {
+      name:trimCharsEnd(i,',',''),
+      tip:''
+    }
+  })
+
+  fs.writeFileSync(_out + 'globalAttribute.json', JSON.stringify(data, undefined, 2))
 }
 
 export async function generateVeturFiles(
