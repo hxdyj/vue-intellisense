@@ -1,0 +1,14 @@
+{
+  "hamburger": {
+    "attributes": [
+      "isActive"
+    ],
+    "description": ""
+  },
+  "Hamburger": {
+    "attributes": [
+      "isActive"
+    ],
+    "description": ""
+  }
+}

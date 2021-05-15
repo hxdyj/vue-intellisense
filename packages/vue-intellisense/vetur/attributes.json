@@ -1,0 +1,8 @@
+{
+  "hamburger/isActive": {
+    "type": "boolean"
+  },
+  "Hamburger/isActive": {
+    "type": "boolean"
+  }
+}

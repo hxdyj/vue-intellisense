@@ -5,6 +5,7 @@ import { readAndParseAlias, handleWarningMissingAlias } from './aliasUtils'
 import { listFiles } from './listFiles'
 import { vueDocgenToVetur } from './vueDocgenToVetur'
 import * as fs from 'fs'
+import { filePathsToVeturJsonData } from './globalAttributesGenToVetur'
 
 handleWarningMissingAlias()
 
@@ -36,12 +37,14 @@ async function vueFilePathsToVeturJsonData(
 async function writeVeturFiles(
   outputPath: string,
   attributes: Record<string, any>,
-  tags: Record<string, any>
+  tags: Record<string, any>,
+  globalAttribute: any
 ): Promise<void> {
   const _out = outputPath.endsWith('/') ? outputPath : outputPath + '/'
   fs.mkdirSync(_out, { recursive: true })
   fs.writeFileSync(_out + 'attributes.json', JSON.stringify(attributes, undefined, 2))
   fs.writeFileSync(_out + 'tags.json', JSON.stringify(tags, undefined, 2))
+  fs.writeFileSync(_out + 'globalAttribute.json', JSON.stringify(globalAttribute, undefined, 2))
 }
 
 export async function generateVeturFiles(
@@ -50,11 +53,12 @@ export async function generateVeturFiles(
   options?: { recursive?: boolean; alias?: { [alias in string]: string } }
 ): Promise<void> {
   const { recursive, alias } = options || {}
-  const inputIsFile = ['.vue', '.jsx', '.tsx'].some((fileType) => inputPath.endsWith(fileType))
+  const inputIsFile = ['.vue', '.jsx', '.tsx','.ts','.js'].some((fileType) => inputPath.endsWith(fileType))
+
   const allFiles = inputIsFile
     ? [inputPath]
     : await listFiles(inputPath, {
-        regexFilter: /\.vue|\.jsx|\.tsx/,
+        regexFilter: /\.vue|\.jsx|\.tsx|\.ts|\.js/,
         recursive,
         resolvePaths: true,
       })
@@ -68,5 +72,6 @@ export async function generateVeturFiles(
     ...options,
     alias: parsedAliase,
   })
-  await writeVeturFiles(outputPath, attributes, tags)
+  const globalAttributs = await filePathsToVeturJsonData(allFiles)
+  await writeVeturFiles(outputPath, attributes, tags,globalAttributs)
 }
