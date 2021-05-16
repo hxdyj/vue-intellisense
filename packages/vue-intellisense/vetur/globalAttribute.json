@@ -1,4 +1,10 @@
 [
-  "directive('aaa')",
-  "directive('bbb',"
+  {
+    "name": "aaa",
+    "tip": ""
+  },
+  {
+    "name": "bbb",
+    "tip": ""
+  }
 ]

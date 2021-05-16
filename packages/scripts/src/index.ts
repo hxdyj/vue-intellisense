@@ -6,7 +6,7 @@ import { listFiles } from './listFiles'
 import { vueDocgenToVetur } from './vueDocgenToVetur'
 import * as fs from 'fs'
 import { filePathsToVeturJsonData } from './globalAttributesGenToVetur'
-import {trimCharsEnd} from 'lodash/fp'
+import {trimChars} from 'lodash/fp'
 
 handleWarningMissingAlias()
 
@@ -47,11 +47,17 @@ async function writeVeturFiles(
   fs.writeFileSync(_out + 'tags.json', JSON.stringify(tags, undefined, 2))
 
   let data = globalAttribute.map(i=>{
+    let match = i.match(/('|")\w+('|")/g)
+    if(match&&match.length!=0){
+      i = match[0]
+    }else{
+      i = ''
+    }
     return {
-      name:trimCharsEnd(i,',',''),
+      name: trimChars("\"",trimChars("'",i)),
       tip:''
     }
-  })
+  }).filter(item=>item.name!=='')
 
   fs.writeFileSync(_out + 'globalAttribute.json', JSON.stringify(data, undefined, 2))
 }

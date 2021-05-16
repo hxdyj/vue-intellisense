@@ -12,6 +12,7 @@ var fs = require('fs');
 var path = require('path');
 var promises = require('fs/promises');
 var caseAnything = require('case-anything');
+var fp = require('lodash/fp');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
@@ -259,7 +260,20 @@ function writeVeturFiles(outputPath, attributes, tags, globalAttribute) {
         fs__namespace.mkdirSync(_out, { recursive: true });
         fs__namespace.writeFileSync(_out + 'attributes.json', JSON.stringify(attributes, undefined, 2));
         fs__namespace.writeFileSync(_out + 'tags.json', JSON.stringify(tags, undefined, 2));
-        fs__namespace.writeFileSync(_out + 'globalAttribute.json', JSON.stringify(globalAttribute, undefined, 2));
+        let data = globalAttribute.map(i => {
+            let match = i.match(/('|")\w+('|")/g);
+            if (match && match.length != 0) {
+                i = match[0];
+            }
+            else {
+                i = '';
+            }
+            return {
+                name: fp.trimChars("\"", fp.trimChars("'", i)),
+                tip: ''
+            };
+        }).filter(item => item.name !== '');
+        fs__namespace.writeFileSync(_out + 'globalAttribute.json', JSON.stringify(data, undefined, 2));
     });
 }
 function generateVeturFiles(inputPath, outputPath, options) {

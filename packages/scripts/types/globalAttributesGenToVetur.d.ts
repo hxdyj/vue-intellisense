@@ -1,1 +1,1 @@
-export declare function filePathsToVeturJsonData(inputPaths: string[]): Promise<any[]>;
+export declare function filePathsToVeturJsonData(inputPaths: string[]): Promise<string[]>;

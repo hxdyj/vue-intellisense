@@ -9,6 +9,7 @@ import * as path from 'path';
 import { resolve } from 'path';
 import { readdir } from 'fs/promises';
 import { kebabCase, pascalCase } from 'case-anything';
+import { trimChars } from 'lodash/fp';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -229,7 +230,20 @@ function writeVeturFiles(outputPath, attributes, tags, globalAttribute) {
         fs.mkdirSync(_out, { recursive: true });
         fs.writeFileSync(_out + 'attributes.json', JSON.stringify(attributes, undefined, 2));
         fs.writeFileSync(_out + 'tags.json', JSON.stringify(tags, undefined, 2));
-        fs.writeFileSync(_out + 'globalAttribute.json', JSON.stringify(globalAttribute, undefined, 2));
+        let data = globalAttribute.map(i => {
+            let match = i.match(/('|")\w+('|")/g);
+            if (match && match.length != 0) {
+                i = match[0];
+            }
+            else {
+                i = '';
+            }
+            return {
+                name: trimChars("\"", trimChars("'", i)),
+                tip: ''
+            };
+        }).filter(item => item.name !== '');
+        fs.writeFileSync(_out + 'globalAttribute.json', JSON.stringify(data, undefined, 2));
     });
 }
 function generateVeturFiles(inputPath, outputPath, options) {
