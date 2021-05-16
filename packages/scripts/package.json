@@ -8,6 +8,7 @@
     "test": "rimraf test/helpers/out && ava"
   },
   "dependencies": {
+    "replace-in-files": "git+ssh://git@github.com:hxdyj/replace-in-files.git",
     "case-anything": "^1.1.2",
     "chalk": "^4.1.1",
     "is-what": "^3.14.1",
