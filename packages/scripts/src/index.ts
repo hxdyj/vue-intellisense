@@ -39,27 +39,28 @@ async function writeVeturFiles(
   outputPath: string,
   attributes: Record<string, any>,
   tags: Record<string, any>,
-  globalAttribute: Array<string>
+  globalAttribute: Array<string> | null | undefined
 ): Promise<void> {
   const _out = outputPath.endsWith('/') ? outputPath : outputPath + '/'
   fs.mkdirSync(_out, { recursive: true })
   fs.writeFileSync(_out + 'attributes.json', JSON.stringify(attributes, undefined, 2))
   fs.writeFileSync(_out + 'tags.json', JSON.stringify(tags, undefined, 2))
+  if(globalAttribute){
+    let data = globalAttribute.map(i=>{
+      let match = i.match(/('|")\w+('|")/g)
+      if(match&&match.length!=0){
+        i = match[0]
+      }else{
+        i = ''
+      }
+      return {
+        name: trimChars("\"",trimChars("'",i)),
+        tip:''
+      }
+    }).filter(item=>item.name!=='')
 
-  let data = globalAttribute.map(i=>{
-    let match = i.match(/('|")\w+('|")/g)
-    if(match&&match.length!=0){
-      i = match[0]
-    }else{
-      i = ''
-    }
-    return {
-      name: trimChars("\"",trimChars("'",i)),
-      tip:''
-    }
-  }).filter(item=>item.name!=='')
-
-  fs.writeFileSync(_out + 'globalAttribute.json', JSON.stringify(data, undefined, 2))
+    fs.writeFileSync(_out + 'globalAttribute.json', JSON.stringify(data, undefined, 2))
+  }
 }
 
 export async function generateVeturFiles(
