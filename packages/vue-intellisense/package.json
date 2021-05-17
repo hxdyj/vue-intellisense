@@ -40,5 +40,8 @@
   },
   "files": [
     "cli.js"
-  ]
+  ],
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^19.0.0"
+  }
 }

@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 'use strict'
 const meow = require('meow')
 const logSymbols = require('log-symbols')

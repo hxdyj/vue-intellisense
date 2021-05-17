@@ -1,4 +1,4 @@
-let replaceInFiles =  require('replace-in-files')
+let replaceInFiles =  require('../lib/replaceInFiles')
 export async function filePathsToVeturJsonData(
   inputPaths: string[]
 ){

@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "allowJs": true,
     "noImplicitAny":false,
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",

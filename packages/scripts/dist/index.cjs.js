@@ -224,7 +224,7 @@ function vueDocgenToVetur(vueDocgen, veturFile) {
     throw new Error('[vue-intellisense] wrong args');
 }
 
-let replaceInFiles = require('replace-in-files');
+let replaceInFiles = require('../lib/replaceInFiles');
 function filePathsToVeturJsonData(inputPaths) {
     return __awaiter(this, void 0, void 0, function* () {
         return (yield replaceInFiles({
