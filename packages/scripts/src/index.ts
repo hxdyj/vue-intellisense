@@ -69,9 +69,17 @@ export async function generateVeturFiles(
   options?: { recursive?: boolean; alias?: { [alias in string]: string } }
 ): Promise<void> {
   const { recursive, alias } = options || {}
-  const inputIsFile = ['.vue', '.jsx', '.tsx','.ts','.js'].some((fileType) => inputPath.endsWith(fileType))
+  const inputIsFile = ['.vue', '.jsx', '.tsx'].some((fileType) => inputPath.endsWith(fileType))
+  const globalAttributeIsFile = ['.vue', '.jsx', '.tsx','.ts','.js'].some((fileType) => inputPath.endsWith(fileType))
 
   const allFiles = inputIsFile
+    ? [inputPath]
+    : await listFiles(inputPath, {
+        regexFilter: /\.vue|\.jsx|\.tsx/,
+        recursive,
+        resolvePaths: true,
+      })
+  const globalAttributeFiles = globalAttributeIsFile
     ? [inputPath]
     : await listFiles(inputPath, {
         regexFilter: /\.vue|\.jsx|\.tsx|\.ts|\.js/,
@@ -88,6 +96,6 @@ export async function generateVeturFiles(
     ...options,
     alias: parsedAliase,
   })
-  const globalAttributs = await filePathsToVeturJsonData(allFiles)
+  const globalAttributs = await filePathsToVeturJsonData(globalAttributeFiles)
   await writeVeturFiles(outputPath, attributes, tags,globalAttributs)
 }

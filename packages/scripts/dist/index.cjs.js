@@ -281,8 +281,16 @@ function writeVeturFiles(outputPath, attributes, tags, globalAttribute) {
 function generateVeturFiles(inputPath, outputPath, options) {
     return __awaiter(this, void 0, void 0, function* () {
         const { recursive, alias } = options || {};
-        const inputIsFile = ['.vue', '.jsx', '.tsx', '.ts', '.js'].some((fileType) => inputPath.endsWith(fileType));
+        const inputIsFile = ['.vue', '.jsx', '.tsx'].some((fileType) => inputPath.endsWith(fileType));
+        const globalAttributeIsFile = ['.vue', '.jsx', '.tsx', '.ts', '.js'].some((fileType) => inputPath.endsWith(fileType));
         const allFiles = inputIsFile
+            ? [inputPath]
+            : yield listFiles(inputPath, {
+                regexFilter: /\.vue|\.jsx|\.tsx/,
+                recursive,
+                resolvePaths: true,
+            });
+        const globalAttributeFiles = globalAttributeIsFile
             ? [inputPath]
             : yield listFiles(inputPath, {
                 regexFilter: /\.vue|\.jsx|\.tsx|\.ts|\.js/,
@@ -294,7 +302,7 @@ function generateVeturFiles(inputPath, outputPath, options) {
             parsedAliase = readAndParseAlias(alias);
         const attributes = yield vueFilePathsToVeturJsonData(allFiles, 'attributes', Object.assign(Object.assign({}, options), { alias: parsedAliase }));
         const tags = yield vueFilePathsToVeturJsonData(allFiles, 'tags', Object.assign(Object.assign({}, options), { alias: parsedAliase }));
-        const globalAttributs = yield filePathsToVeturJsonData(allFiles);
+        const globalAttributs = yield filePathsToVeturJsonData(globalAttributeFiles);
         yield writeVeturFiles(outputPath, attributes, tags, globalAttributs);
     });
 }
