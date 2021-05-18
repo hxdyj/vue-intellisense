@@ -59,7 +59,7 @@ async function writeVeturFiles(
       }
     }).filter(item=>item.name!=='')
 
-    fs.writeFileSync(_out + 'globalAttribute.json', JSON.stringify(data, undefined, 2))
+    fs.writeFileSync(_out + 'globalAttributes.json', JSON.stringify(data, undefined, 2))
   }
 }
 
