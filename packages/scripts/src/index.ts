@@ -54,7 +54,7 @@ async function writeVeturFiles(
         i = ''
       }
       return {
-        name: trimChars("\"",trimChars("'",i)),
+        name: 'v-'+trimChars("\"",trimChars("'",i)),
         tip:''
       }
     }).filter(item=>item.name!=='')

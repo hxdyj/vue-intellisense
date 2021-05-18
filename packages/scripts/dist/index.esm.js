@@ -240,7 +240,7 @@ function writeVeturFiles(outputPath, attributes, tags, globalAttribute) {
                     i = '';
                 }
                 return {
-                    name: trimChars("\"", trimChars("'", i)),
+                    name: 'v-' + trimChars("\"", trimChars("'", i)),
                     tip: ''
                 };
             }).filter(item => item.name !== '');
